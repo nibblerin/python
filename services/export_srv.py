@@ -35,6 +35,7 @@ class ExportService:
                     field.text = str(value)
 
         tree = ET.ElementTree(root)
+        ET.indent(tree, space="    ")
         tree.write(
             file_path,
             encoding="utf-8",
