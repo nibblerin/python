@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from database.base import Database
+from database.interface import Database
 from reader.json_reader import JsonFileReader
 
 class ImportService:

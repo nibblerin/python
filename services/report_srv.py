@@ -8,7 +8,7 @@
     2. All the “math” should be done at the database level
 
 """
-from database.base import Database
+from database.interface import Database
 
 
 class ReportService:
