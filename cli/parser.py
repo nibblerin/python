@@ -1,18 +1,15 @@
 import argparse
 
-
 def parse_arguments():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
         "--students",
-        required=True,
         help="Path to students JSON file"
     )
 
     parser.add_argument(
         "--rooms",
-        required=True,
         help="Path to rooms JSON file"
     )
 
@@ -23,4 +20,23 @@ def parse_arguments():
         help="Output format"
     )
 
-    return parser.parse_args()
+    parser.add_argument(
+        "--use-indexes",
+        action="store_true",
+        help="Create additional indexes"
+    )
+
+    parser.add_argument(
+        "--export-only",
+        action="store_true",
+        help="Export existing database data without reloading"
+    )
+
+    args = parser.parse_args()
+
+    if not args.export_only and (not args.students or not args.rooms):
+        parser.error(
+            "--students and --rooms are required unless --export-only is used"
+        )
+
+    return args
