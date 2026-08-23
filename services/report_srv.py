@@ -76,7 +76,7 @@ class ReportService:
             FROM rooms r
             JOIN students st ON st.room_id = r.id
             GROUP BY r.id, r.name
-            HAVING COUNT(DISTINCT st.sex) > 1
+            HAVING MIN(st.sex) <> MAX(st.sex)
             ORDER BY r.id;
         """
         return self._db.fetchall(query)
