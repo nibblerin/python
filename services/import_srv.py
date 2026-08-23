@@ -1,14 +1,15 @@
 import json
 from datetime import datetime
 from database.base import Database
+from reader.json_reader import JsonFileReader
 
 class ImportService:
-    def __init__(self, db: Database):
+    def __init__(self, db: Database, reader: JsonFileReader):
         self._db = db
+        self._reader = reader
 
     def load_rooms(self, file_path: str) -> None:
-        with open(file_path, "r", encoding="utf-8") as file:
-            rooms = json.load(file)
+        rooms = self._reader.read(file_path)
 
         query = """
             INSERT INTO rooms (id, name)
@@ -23,8 +24,7 @@ class ImportService:
         self._db.executemany(query, data)
 
     def load_students(self, file_path: str) -> None:
-        with open(file_path, "r", encoding="utf-8") as file:
-            students = json.load(file)
+        students = self._reader.read(file_path)
 
         query = """
             INSERT INTO students
