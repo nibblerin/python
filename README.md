@@ -117,6 +117,9 @@ The indexes in `sql/indexes.sql` remain useful, though, for queries that
 **do** filter by a small subset, but those are not part of the
 4 required aggregate reports.
 
+I realize, that most of these indexes are for potential queries, that are not implemented here. But given the
+relatively small data volume, the storage/write overhead is negligible.
+
 ## Requirements
 
 - Python 3.10+(tested with 15)
