@@ -52,12 +52,3 @@ class PostgresDatabase(Database):
         
     def rollback(self) -> None:
         self._connection.rollback()
-
-    def __enter__(self) -> "PostgresDatabase":
-        return self
-    
-    def __exit__(self, exc_type, exc, tb) -> bool:
-        if exc_type is not None:
-            self.rollback()
-        self.close()
-        return False

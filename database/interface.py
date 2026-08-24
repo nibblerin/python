@@ -24,3 +24,12 @@ class Database(ABC):
     @abstractmethod
     def close(self) -> None:
         pass
+
+    def __enter__(self) -> "Database":
+        return self
+
+    def __exit__(self, exc_type, exc, tb) -> bool:
+        if exc_type is not None:
+            self.rollback()
+        self.close()
+        return False
