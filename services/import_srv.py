@@ -1,10 +1,9 @@
-import json
 from datetime import datetime
 from database.interface import Database
-from reader.json_reader import JsonFileReader
+from reader.interface import FileReader
 
 class ImportService:
-    def __init__(self, db: Database, reader: JsonFileReader):
+    def __init__(self, db: Database, reader: FileReader):
         self._db = db
         self._reader = reader
 
