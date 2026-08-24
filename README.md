@@ -158,7 +158,7 @@ pip install -r requirements.txt
 ```
 ### 3. Configure environment variables
 
-Create .env`. Copy `.env.example` to `.env` and fill in your password:
+Create `.env`. Copy this .env example text to your `.env` and fill in your password:
 
 ```
 DB_HOST=localhost
