@@ -85,8 +85,16 @@ See [`sql/indexes.sql`](sql/indexes.sql).
   lookups scoped to a single room 
 - `idx_students_room_sex (room_id, sex)` — sex-filtered lookups
   scoped to a single room
-- `idx_students_name (name)` — exact-match student lookup by name
+- `idx_students_name (name)` — prefix-based student lookup by name
 - `idx_rooms_name (name)` — exact-match room lookup by name
+
+I understand the leftmost-prefix principle:
+since room_id is the first column in both composite indexes,
+(room_id, birthday) and (room_id, sex) can also be used for queries filtering by room_id alone.
+Therefore, if these composite indexes remain part of the business logic,
+the separate idx_students_room_id index may be redundant and can be removed.
+
+However, idx_students_room_id is intentionally included here as a basic, standalone index on the most important join/filtering column. The composite indexes are presented as additional indexes for more specific query patterns and potential future use.
 
 `rooms.id` already has a unique index via its `PRIMARY KEY`, so no
 extra index is needed on the `rooms` side. `idx_students_room_id`
