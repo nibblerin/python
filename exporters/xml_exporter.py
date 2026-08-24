@@ -17,7 +17,7 @@ class XmlExporter(ReportExporter):
 
                 for key, value in row.items():
                     field = ET.SubElement(item, key)
-                    field.text = str(value)
+                    field.text = "" if value is None else str(value)
 
         tree = ET.ElementTree(root)
 

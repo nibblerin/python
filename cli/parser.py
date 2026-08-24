@@ -29,7 +29,7 @@ def parse_arguments():
     parser.add_argument(
         "--export-only",
         action="store_true",
-        help="Export existing database data without reloading"
+        help="Export existing database data without reloading (WARNING: without this flag, existing tables are dropped and recreated)"
     )
 
     args = parser.parse_args()
