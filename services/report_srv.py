@@ -29,12 +29,8 @@ class ReportService:
     def top5_rooms_smallest_avg_age(self) -> list[dict]:
         """5 rooms with the smallest average age of students"""
         query = """
-        SELECT r.id as room_id, r.name as room_name, AVG(
-                DATE_PART(
-                    'year',
-                    AGE(CURRENT_DATE, st.birthday)
-                )
-            ) AS avg_age
+        SELECT r.id as room_id, r.name as room_name, 
+        ROUND(AVG(calculate_age_years(st.birthday)), 2) AS avg_age
         FROM rooms r
         JOIN students st ON st.room_id = r.id
         GROUP BY r.id, r.name
@@ -48,19 +44,11 @@ class ReportService:
         youngest student."""
         query = """
         SELECT r.id AS room_id, r.name AS room_name,
-            MAX(
-                DATE_PART(
-                    'year',
-                    AGE(CURRENT_DATE, st.birthday)
-                )
-            )
-            -
-            MIN(
-                DATE_PART(
-                    'year',
-                    AGE(CURRENT_DATE, st.birthday)
-                )
-            ) AS age_diff
+        ROUND(
+            MAX(calculate_age_years(st.birthday))
+            - MIN(calculate_age_years(st.birthday)),
+            2
+        ) AS age_diff
         FROM rooms r
         JOIN students st ON st.room_id = r.id
         GROUP BY r.id, r.name

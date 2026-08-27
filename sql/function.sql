@@ -1,0 +1,6 @@
+CREATE OR REPLACE FUNCTION calculate_age_years(birthday DATE)
+RETURNS NUMERIC
+LANGUAGE SQL
+AS $$
+    SELECT (CURRENT_DATE - birthday) / 365.2425;
+$$;

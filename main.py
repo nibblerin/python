@@ -13,6 +13,7 @@ from config import default_output_path
 BASE_DIR = Path(__file__).resolve().parent
 SCHEMA_PATH = BASE_DIR / "sql" / "schema.sql"
 INDEXES_PATH = BASE_DIR / "sql" / "indexes.sql"
+FUNCTION_PATH = BASE_DIR / "sql" / "function.sql"
 
 def main() -> None:
     load_dotenv()
@@ -25,6 +26,7 @@ def main() -> None:
 
             schema.drop_tables()
             schema.apply_file(SCHEMA_PATH)
+            schema.apply_file(FUNCTION_PATH)
 
             importer = ImportService(db, JsonFileReader())
             importer.load_rooms(args.rooms)
