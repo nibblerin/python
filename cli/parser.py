@@ -21,6 +21,12 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "--output",
+        default=None,
+        help="Path to the output report file (default: taken from config/.env)"
+    )
+
+    parser.add_argument(
         "--use-indexes",
         action="store_true",
         help="Create additional indexes"

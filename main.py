@@ -7,6 +7,8 @@ from reader.json_reader import JsonFileReader
 from services.import_srv import ImportService
 from services.report_srv import ReportService
 from services.schema_srv import SchemaService
+from config import default_output_path
+
 
 BASE_DIR = Path(__file__).resolve().parent
 SCHEMA_PATH = BASE_DIR / "sql" / "schema.sql"
@@ -35,8 +37,9 @@ def main() -> None:
             db.commit()
 
         data = ReportService(db).build_all_reports()
+        output_path = args.output or BASE_DIR / default_output_path(args.format)
 
-        create_exporter(args.format).export(data)
+        create_exporter(args.format).export(data, output_path)
 
 
 if __name__ == "__main__":

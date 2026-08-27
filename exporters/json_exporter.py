@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from exporters.interface import ReportExporter
 
@@ -7,9 +8,10 @@ class JsonExporter(ReportExporter):
     def export(
         self,
         data: dict,
-        file_path: str = "result_json.json"
+        file_path: str | Path
     ) -> None:
-        with open(file_path, "w", encoding="utf-8") as file:
+        path = Path(file_path)
+        with path.open("w", encoding="utf-8") as file:
             json.dump(
                 data,
                 file,

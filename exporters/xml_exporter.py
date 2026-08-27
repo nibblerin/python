@@ -1,11 +1,13 @@
 import xml.etree.ElementTree as ET
 from exporters.interface import ReportExporter
+from pathlib import Path
+
 
 class XmlExporter(ReportExporter):
     def export(
         self,
         data: dict,
-        file_path: str = "result_xml.xml"
+        file_path: str | Path
     ) -> None:
         root = ET.Element("reports")
 
@@ -22,9 +24,9 @@ class XmlExporter(ReportExporter):
         tree = ET.ElementTree(root)
 
         ET.indent(tree, space="    ")
-
+        path = Path(file_path)
         tree.write(
-            file_path,
+            path,
             encoding="utf-8",
             xml_declaration=True
         )
