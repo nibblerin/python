@@ -10,5 +10,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-result_json.json
-result_xml.xml
+.json
+.xml
+data/
