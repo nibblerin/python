@@ -7,10 +7,7 @@ class SchemaService:
 
     def apply_file(self, file_path: str | Path) -> None:
         sql = Path(file_path).read_text(encoding="utf-8")
-        for statement in sql.split(";"):
-            statement = statement.strip()
-            if statement:
-                self._db.execute(statement)
+        self._db.execute(sql)
 
     def drop_tables(self) -> None:
         self._db.execute(
