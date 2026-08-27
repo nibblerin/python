@@ -23,8 +23,9 @@ def parse_arguments():
     parser.add_argument(
         "--output",
         default=None,
-        help="Path to the output report file (default: taken from config/.env)"
-    )
+        help="Output file name. The extension is always taken from "
+        "" "--format," \
+        " so it can be omitted or will be corrected " "if it doesn't match.")
 
     parser.add_argument(
         "--use-indexes",

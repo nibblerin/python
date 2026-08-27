@@ -33,12 +33,11 @@ def main() -> None:
             if args.use_indexes:
                 schema.apply_file(INDEXES_PATH)
 
-
             db.commit()
 
         data = ReportService(db).build_all_reports()
-        output_path = args.output or BASE_DIR / default_output_path(args.format)
-
+        output_name = Path(args.output) if args.output else Path(default_output_path(args.format))
+        output_path = (BASE_DIR / output_name).with_suffix(f".{args.format}")
         create_exporter(args.format).export(data, output_path)
 
 
