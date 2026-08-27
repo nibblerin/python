@@ -24,12 +24,13 @@ def main() -> None:
             schema.drop_tables()
             schema.apply_file(SCHEMA_PATH)
 
-            if args.use_indexes:
-                schema.apply_file(INDEXES_PATH)
-
             importer = ImportService(db, JsonFileReader())
             importer.load_rooms(args.rooms)
             importer.load_students(args.students)
+            
+            if args.use_indexes:
+                schema.apply_file(INDEXES_PATH)
+
 
             db.commit()
 
