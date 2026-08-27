@@ -33,9 +33,6 @@ project/
   cli/
     __init__.py
     parser.py                  argparse: --students, --rooms, --format, --use-indexes, --export-only
-  data/
-    students.json                  input data
-    rooms.json                     input data
   database/
     __init__.py
     interface.py                Database ABC (execute/executemany/fetchall/commit/rollback/close/enter/exit)
@@ -56,8 +53,10 @@ project/
     report_srv.py                 the 4 required reports — all math done in SQL
   sql/
     schema.sql                    CREATE TABLE statements
-    indexes.sql                   recommended indexes
+    indexes.sql                   recommended indexes    
+    function.sql                  the function, that calculates age
   requirements.txt
+  config.py                    default output file names, read from .env
   .gitignore
 ```
 
@@ -78,9 +77,9 @@ just in case)
 See [`sql/indexes.sql`](sql/indexes.sql).
 
 - `idx_students_room_id (room_id)` — speeds up point lookups and
-  filtering by a single room
+  filtering by a single room - was removed
 - `idx_students_birthday (birthday)` — this plain index would help
-  global date-range queries not scoped to a room 
+  global date-range queries not scoped to a room  - was removed
 - `idx_students_room_birthday (room_id, birthday)` — birthday-range
   lookups scoped to a single room 
 - `idx_students_room_sex (room_id, sex)` — sex-filtered lookups
@@ -127,6 +126,7 @@ The indexes in `sql/indexes.sql` remain useful, though, for queries that
 
 I realize, that most of these indexes are for potential queries, that are not implemented here. But given the
 relatively small data volume, the storage/write overhead is negligible.
+upd. after the review, single indexes were removed.
 
 ## Requirements
 
@@ -165,7 +165,9 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=rooms_students
 DB_USER=postgres
-DB_PASSWORD=your_password_here
+DB_PASSWORD=your_password_here\
+DEFAULT_OUTPUT_JSON=result_json.json
+DEFAULT_OUTPUT_XML=result_xml.xml
 ```
 
 ### 4. Create the database
@@ -191,6 +193,7 @@ python main.py --students path/to/students.json --rooms path/to/rooms.json --for
 | `--students` | yes, unless `--export-only` | Path to `students.json` |
 | `--rooms` | yes, unless `--export-only` | Path to `rooms.json` |
 | `--format` | yes | Output format: `json` or `xml` |
+| `--output` | no | Output file path. Relative paths are resolved against the project directory. The extension is always taken from `--format`, so it can be omitted or will be corrected if it doesn't match. Default: taken from `.env` (`DEFAULT_OUTPUT_JSON`/`DEFAULT_OUTPUT_XML`). |
 | `--use-indexes` | no | Also apply `sql/indexes.sql` after creating the schema |
 | `--export-only` | no | Skip dropping/reloading data; just re-export reports from what's already in the database |
 
@@ -212,6 +215,13 @@ Re-export existing data as XML without reloading:
 ```bash
 python main.py --format xml --export-only
 ```
+Custom output path (extension is still forced to match `--format`):
 
-Output files are written to the project root by default:
-`result_json.json` / `result_xml.xml`.
+```bash
+python main.py --format json --export-only --output reports/my_report
+
+Output files are resolved against the project directory by default
+(`result_json.json` / `result_xml.xml`, configurable via `.env`), not
+against the current working directory the command was run from. Pass
+`--output` to choose a different path — relative paths are still
+resolved against the project directory
