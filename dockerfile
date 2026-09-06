@@ -1,11 +1,16 @@
-FROM python:3.14-slim
+FROM python:3.14-slim AS builder
 
 WORKDIR /app
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
+FROM python:3.14-slim AS runtime
+WORKDIR /app
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
 COPY . .
+
 
 ENTRYPOINT ["python", "main.py"]
 CMD ["--help"]
