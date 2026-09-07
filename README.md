@@ -225,7 +225,7 @@ Output files are resolved against the project directory by default
 against the current working directory the command was run from. Pass
 `--output` to choose a different path — relative paths are still
 resolved against the project directory
-
+```
 ## Containerization & Security
 
 - **Dockerization Added**: The application is containerized using a multi-stage Docker build for optimal image size and speed.
