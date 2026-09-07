@@ -225,3 +225,23 @@ Output files are resolved against the project directory by default
 against the current working directory the command was run from. Pass
 `--output` to choose a different path — relative paths are still
 resolved against the project directory
+
+## Containerization & Security
+
+- **Dockerization Added**: The application is containerized using a multi-stage Docker build for optimal image size and speed.
+- **Enhanced Security**: 
+  - The container adheres to current security standards, running strictly as a non-root user (**UID 10001**) right from the start.
+  - Features a locked **read-only** filesystem and completely dropped Linux capabilities (`cap_drop: ALL`).
+
+### Important Permission Setup
+
+Since the container runs under a strict non-root user (UID 10001 is specified explicitly for traceblity + no harm can be done while operating as a root) and uses a read-only filesystem, you **must fix host directory permissions** before running Docker Compose for the bind mount to work correctly. This would not be a problem if i used named volumes, but that's a bad practice to use named volumes for outputs: you may need to acceess them right away.
+
+>  **Note on Directory Creation**: Although the Python source code contains logic to automatically create the output directory, this automation is bypassed by Docker's runtime restrictions. Due to the strict `read_only: true` architecture and early volume mounting phases, the host directory must be pre-created and chowned manually before running the container
+
+Run the following command in your terminal before launching the containers:
+
+```bash
+mkdir -p output && sudo chown 10001:10001 output
+docker compose up --build
+```
