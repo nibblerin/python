@@ -235,7 +235,8 @@ resolved against the project directory
 
 ### Important Permission Setup
 
-Since the container runs under a strict non-root user (UID 10001 is specified explicitly for traceblity + no harm can be done while operating as a root) and uses a read-only filesystem, you **must fix host directory permissions** before running Docker Compose for the bind mount to work correctly. This would not be a problem if i used named volumes, but that's a bad practice to use named volumes for outputs: you may need to acceess them right away.
+UID 10001 is specified explicitly for traceability, and to ensure the containerized process never runs with root privileges, limiting the blast radius if the application is ever compromised.
+Since the container runs under a strict non-root user and uses a read-only filesystem, you **must fix host directory permissions** before running Docker Compose for the bind mount to work correctly. This would not be a problem if i used named volumes, but that's a bad practice to use named volumes for outputs: you may need to acceess them right away.
 
 >  **Note on Directory Creation**: Although the Python source code contains logic to automatically create the output directory, this automation is bypassed by Docker's runtime restrictions. Due to the strict `read_only: true` architecture and early volume mounting phases, the host directory must be pre-created and chowned manually before running the container
 
