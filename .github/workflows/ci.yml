@@ -33,11 +33,11 @@ jobs:
         run: docker compose logs app
 
       - name: Scan app image
-        uses: docker/scout-action@v1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
-          command: cves
-          image: trainee-app:latest
-          exit-code: true
+          image-ref: trainee-app:latest
+          severity: HIGH,CRITICAL
+          exit-code: '1'
         
       - name: Tear down
         run: docker compose down -v
