@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Create .env for CI
+        run: |
+          echo "DB_USER=testuser" >> .env
+          echo "DB_PASSWORD=testpass" >> .env
+          echo "DB_NAME=testdb" >> .env
+
+      - name: Prepare output dir permissions
+        run: |
+          mkdir -p output data
+          sudo chown 10001:10001 output
+
+      - name: Start stack
+        run: docker compose up --build -d
+
+      - name: Wait for app to finish / check logs
+        run: docker compose logs app
+
+      - name: Scan app image
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: trainee-app:latest
+          exit-code: true
+        
+      - name: Tear down
+        run: docker compose down -v
