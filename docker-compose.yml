@@ -21,6 +21,7 @@ services:
 
   app:
     build: .
+    image: trainee-app:latest
     container_name: rooms_students_app
     read_only: true
     tmpfs:
